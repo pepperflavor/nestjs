@@ -45,7 +45,7 @@ export class CreatorSignupService {
             console.log("@@@PWD",hasPWD)
             newsignupForm.user_pwd = hasPWD;
             
-            
+
         // bcrypt.genSalt(SORT_NUM, function(err, salt){
         //     bcrypt.hash(enterPWD, salt, function(err, hash){
         //         console.log("@@@@",hash);
@@ -66,7 +66,13 @@ export class CreatorSignupService {
             const signupVerifyToken = uuid.v1();
 
             newsignupForm.user_email_token = signupVerifyToken; 
+
+            const cacheKey = newsignupForm.user_email;
+            await this.cacheManger.set(`${signupVerifyToken}`, signupVerifyToken) // 토큰저장
+            await this.cacheManger.set(`${cacheKey}`, cacheKey); // 이메일저장
             // 레디스에 회원가입 정보 객체 저장
+            // 키 이름을 이메일로
+            await this.cacheManger.set(`${cacheKey}_form`, newsignupForm);
             await this.cacheManger.set('creatorSignupForm', newsignupForm);
             
 
@@ -126,7 +132,7 @@ export class CreatorSignupService {
 
     // 크리에이터로 가입하려면 이메일 인증
     private async sendCreatorJoinEmail(email:string, signupVerifyToken: string): Promise<any>{
-       await this.emailService.sendCreatorJoinVerification(email, signupVerifyToken);
+       await this.emailService.sendCreatorJoinVerification(email, signupVerifyToken, 'signUP');
        console.log("sendCreatorJoinEmail 진행되었다")
        // signupform 돌려줄줄 알았는데 아님
        //return result; => sendCreatorJoinVerification을 실행시키기 때문에 리턴값이 비어있었음
@@ -138,8 +144,18 @@ export class CreatorSignupService {
     async verifyEmail(signupVerifyToken: string): Promise<any>{
         // url에 담겼던 토큰 꺼내서 일치하는 유저가 있는지 확인
             const result = await this.prisma.$queryRaw`SELECT * FROM USER WHERE user_email_token =${signupVerifyToken}`
-            console.log("@@@verifyEmail 결과값 : ",result);
+            // result 빈 배열나옴
+
             const creatorDataForm = await this.cacheManger.get('creatorSignupForm');
+            const {user_email} = creatorDataForm;
+
+            const cacheToken = await this.cacheManger.get(`${user_email}_emailtoken`);
+            if(signupVerifyToken == cacheToken){
+
+            }
+            console.log("@@@ 토큰 캐시에서 뽑아옴 ", cacheToken);
+            
+            
             await this.prisma.user.create({
                 data : creatorDataForm
             })
@@ -154,6 +170,5 @@ export class CreatorSignupService {
         // DB에서 signupVerifyToken으로 회원가입 처리중인 유저가 있는지 조회하고 없다면 에러 처리
         // 바로 로그인 상태가 되도록 JWT 발급
         //throw new Error('일단 오류 뱉기')
-        
 }
 

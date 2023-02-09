@@ -17,6 +17,7 @@ import { FileS3Module } from './file-s3/file-s3.module';
 
 //import { AppController } from './app.controller';
 import * as redisStore from 'cache-manager-ioredis';
+import { CacheService } from './cache/cache.service';
 
 
 // AdminModule,
@@ -37,7 +38,6 @@ import * as redisStore from 'cache-manager-ioredis';
       provide : APP_PIPE,
       useClass: ValidationPipe,
     },
-    PrismaService,
   ],
 })
 //AppController
