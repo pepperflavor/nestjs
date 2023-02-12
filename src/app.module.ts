@@ -24,7 +24,7 @@ import { CacheService } from './cache/cache.service';
 // @Global()
 @Module({
   //DownloadModule,
-  imports: [UserModule, CreatorModule, AdminModule, EmailModule, UploadsModule, FileS3Module,
+  imports: [UserModule, CreatorModule, AdminModule, EmailModule, FileS3Module,
     ConfigModule.forRoot({
       isGlobal: true, // 전체적으로 사용하기 위해
       envFilePath: `${process.env.NODE_ENV}.env`

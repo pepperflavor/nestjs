@@ -30,5 +30,5 @@ export class CreatorShinchungController {
     "lyric_name": "작사가",
     "sing_name": "하진가수"
 }
-
+// s3 이미지 객체 url https://divetospace.s3.ap-northeast-2.amazonaws.com/sample_1.jpg
 */

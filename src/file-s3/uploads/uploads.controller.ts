@@ -1,5 +1,5 @@
 import { Body, Controller, Post, UploadedFile, UseInterceptors, Get } from '@nestjs/common';
-import { UploadedFiles } from "@nestjs/common/decorators";
+import { Param, UploadedFiles } from "@nestjs/common/decorators";
 import { FileFieldsInterceptor, FileInterceptor } from "@nestjs/platform-express";
 import { Expr } from "aws-sdk/clients/cloudsearchdomain";
 import { UploadsService } from './uploads.service';
@@ -18,10 +18,10 @@ export class UploadsController {
       console.log("@@@@ 컨트롤러", url);
     }
 
-    @Post('/:id')
+    @Post('/music')
     @UseInterceptors(FileInterceptor('file'))
-    async postS3Music(@UploadedFile() file: Express.MulterS3.File){
-      const url = await this.uploadService.s3UploadMusic(file)
+    async postS3Music(@UploadedFile() file: Express.MulterS3.File , @Param('id') filename:string){
+      const url = await this.uploadService.s3UploadMusic(file, filename);
     }
 
   }

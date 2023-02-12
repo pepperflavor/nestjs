@@ -4,6 +4,8 @@ import { HttpService } from '@nestjs/axios';
 import { EmailService } from '../../email/email.service';
 import { NFTStorage, File, Blob } from 'nft.storage';
 import mime from 'mime';
+import axios from 'axios';
+
 
 @Injectable()
 export class MypageService {
@@ -136,11 +138,14 @@ export class MypageService {
         const title = result.shin_title;
 
         // 지갑주소로 이메일 찾기
-        const temptwo = await this.prisma.user.findUnique({
+        const temptwo = await this.prisma.user.findFirst({
             where: {
                 user_wallet: wallet
             }
         })
+
+        console.log("@@@ temptwo : ",temptwo);
+        
         const email = temptwo.user_email
         console.log("@@@ temptwo : ", temptwo) //데이터 잘나온다.
         
@@ -172,7 +177,7 @@ export class MypageService {
 
         const wallet = result.shin_creator_address // 지갑주소
         console.log("@@ 뽑아낸 지갑주소 : ",wallet);
-        const title = result.shin_title;
+        const title = result.shin_title; // 음악파일 이름 뽑음
 
         // 지갑주소로 이메일 찾기
         const temp = await this.prisma.user.findUnique({
@@ -184,7 +189,18 @@ export class MypageService {
         console.log("@@@ temp : ", temp) //데이터 잘나온다
         
         // 메일로 알려주기
-        await this.emailService.sendCreatorJoinVerification(email, title, 'reject')
+        await this.emailService.sendCreatorJoinVerification(email, title, 'reject');
+
+        const instance = axios.create({
+            baseURL : 'http://localhost:3001/deleteS3/'
+        })
+
+        const response = await instance.delete(`${title}`);
+        if(response){
+            console.log('삭제 성공, mypage')
+        }else{
+            console.log('삭제 실패, mypage ')
+        }
 
         if(result){
             console.log('승인 반려처리 성공');
@@ -193,6 +209,8 @@ export class MypageService {
             throw new HttpException('승인 반려처리 실패', 400);
         }
     }
+
+
 
     // 메타데이터 피닝하고 주소 받아오는 함수
     private async uploadIPFS(fundingDATA: object){

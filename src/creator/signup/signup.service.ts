@@ -36,13 +36,11 @@ export class CreatorSignupService {
 
         // 닉네임 중복검사
         const existNickName = await this.isExistNickName(nick);
-        console.log("@@@@@ 닉네임 : ", existNickName);
-        
+
 
        if(existUser && existNickName){// 가입가능한 유저라면
             // 입력받은 비밀번호 해시화해서 저장...이 안되고 있음
             const hasPWD = bcrypt.hashSync(enterPWD, SORT_NUM);
-            console.log("@@@PWD",hasPWD)
             newsignupForm.user_pwd = hasPWD;
             
 
@@ -68,12 +66,11 @@ export class CreatorSignupService {
             newsignupForm.user_email_token = signupVerifyToken; 
 
             const cacheKey = newsignupForm.user_email;
-            await this.cacheManger.set(`${signupVerifyToken}`, signupVerifyToken) // 토큰저장
-            await this.cacheManger.set(`${cacheKey}`, cacheKey); // 이메일저장
+            //await this.cacheManger.set(`${signupVerifyToken}`, signupVerifyToken) // 토큰저장
+            //await this.cacheManger.set(`${cacheKey}`, cacheKey); // 이메일저장
             // 레디스에 회원가입 정보 객체 저장
-            // 키 이름을 이메일로
-            await this.cacheManger.set(`${cacheKey}_form`, newsignupForm);
-            await this.cacheManger.set('creatorSignupForm', newsignupForm);
+            // 키 이름 == 이메일
+            await this.cacheManger.set(`${cacheKey}`, newsignupForm);
             
 
             // 이메일 발송
@@ -141,23 +138,17 @@ export class CreatorSignupService {
 
 
     // 유효한 이메일인지 확인 
-    async verifyEmail(signupVerifyToken: string): Promise<any>{
+    async verifyEmail(signupVerifyToken: string, email: string): Promise<any>{
         // url에 담겼던 토큰 꺼내서 일치하는 유저가 있는지 확인
             const result = await this.prisma.$queryRaw`SELECT * FROM USER WHERE user_email_token =${signupVerifyToken}`
             // result 빈 배열나옴
 
-            const creatorDataForm = await this.cacheManger.get('creatorSignupForm');
-            const {user_email} = creatorDataForm;
-
-            const cacheToken = await this.cacheManger.get(`${user_email}_emailtoken`);
-            if(signupVerifyToken == cacheToken){
-
-            }
-            console.log("@@@ 토큰 캐시에서 뽑아옴 ", cacheToken);
-            
-            
+            const cacheKey = email;
+            const DATA = await this.cacheManger.get(`${cacheKey}`);
+            console.log("@@ 캐시에 저장했던 회원가입 정보 : ", DATA);
+                     
             await this.prisma.user.create({
-                data : creatorDataForm
+                data : DATA
             })
             console.log("회원가입 완료");
 

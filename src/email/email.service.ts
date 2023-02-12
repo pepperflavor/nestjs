@@ -41,7 +41,7 @@ export class EmailService {
     if(option == 'signUP'){
               // 유저가 누를 버튼이 가질링크 구성, 이 링크로 다시 우리 서비스로 이메일 인증요청이 들어옴
         // /creator_signup/email_verify 이 주소로 다시 요청을보냄
-        const url = `${baseURL}/creator/email-verify?signupVerifyToken=${signupVerifyToken}`;
+        const url = `${baseURL}/creator/email-verify?signupVerifyToken=${signupVerifyToken}&email=${emailAddress}`;
         
         const mailOptions: EmailOptions ={
             to: emailAddress,

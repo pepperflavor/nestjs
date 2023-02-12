@@ -2,6 +2,7 @@ import { Injectable, StreamableFile } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as AWS from 'aws-sdk';
 import { CacheService } from '../../cache/cache.service';
+import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
 // aws-sdk v2 사용
 @Injectable()
@@ -22,22 +23,26 @@ export class DownloadService {
         // s3 버킷에 요청을 보내기위해 버킷 이름과 다운로드할 파일 경로
         const options = {
             Bucket : this.config.get('AWS_S3_BUCKET_NAME_MUSIC'), // 버킷이름, 여기선 음악파일버킷지정해둠
-            Key : `${ musictitle }`// 버킷내 파일경로
+            Key : `${musictitle}.mp3`// 버킷내 파일경로
         }
 
         const stream = s3.getObject(options).createReadStream();
+        console.log(stream)
+
         // 스트림을 파이핑해서 응답함, 이걸 redis에 저장하는 법은 없을까?
-        const musicfile =  new StreamableFile(stream);
+        const musicfile = new StreamableFile(stream);
+
+        console.log("뮤직 파일 : ",musicfile)
         await this.cache.set(`${musictitle}`, musicfile);
         const result = await this.cache.get(`${musictitle}`);
-        console.log("@@ 음악파일 다운받은것 : ",result)
+        //console.log("@@ 음악파일 다운받은것 : ",result)
 
         if(result == null || undefined){
             return console.log("음악다운로드 실패")
         }else{
             return console.log("음악다운로드 성공 틀어보자")
         }
-    }
+     }
 }
 
 /*

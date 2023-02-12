@@ -34,52 +34,34 @@ export class SignupService {
 
     
     // 이미 가입하는 유저인지 확인: bool
-    private isExistUser(user_wallet: string): boolean{
-        try {
+    private async isExistUser(user_wallet: string){
             const userwallet = user_wallet;
             // 이미 존재하는 유저인지 확인
-            const exist = this.userLoginService.findOne(userwallet);
+            const exist = await this.prisma.user.findFirst({
+                where : {
+                    user_wallet: userwallet
+                }
+            });
             if(exist == null||undefined){
-                return false;
-            } 
-            return true;
-        } catch (error) {
-            throw new HttpException('이미 존재하는 회원입니다.', HttpStatus.BAD_REQUEST)
-        }
+                return true;
+            }else{
+                throw new HttpException('이미 존재하는 회원입니다.', HttpStatus.BAD_REQUEST)
+            }
     }
 
        // 닉네임 중복검사
-       private isExistNickName(user_nickname: string): boolean{
-        try {
-            const exist = this.userLoginService.findOne(user_nickname);
-            // 값이 존재하면
+       private async isExistNickName(user_nickname: string){
+            const exist = await this.prisma.user.findFirst({
+                where : {
+                    user_nickname : user_nickname
+                }
+            });
+            // 값이 존재하지 않으면
             if(exist == null||undefined){
-                return false;
+                return true;
             }
-            return true;
-        } catch (error) {
             throw new HttpException('중복된 아이디입니다.', HttpStatus.BAD_REQUEST);
-        }
+
     }
 }
 
-/*
-        // 비밀번호 
-    //     async transformPassword(signupform: userSignUpDto): Promise<userSignUpDto>{
-    //         try {
-    //             const userwallet = signupform.user_wallet;// 회원가입창에서 지갑주소만 추출
-    //             const userPWD = signupform.user_pwd;
-    //             const newsignupForm = {...signupform}
-    //             // 이미 존재하는 유저인지 확인
-    //             const exist = await this.userLoginService.findOne(userwallet).then((e)=>{
-    //                 const hashPWD= bcrypt.hash(userPWD, 10, (err, encryptedPw: string): any =>{
-    //                     newsignupForm.user_pwd = encryptedPw;
-    //                 });
-    //             })
-    //             return newsignupForm;   
-    //         } catch (error) {      
-    //         throw new HttpException('로그인 실패', 401);
-    //     }
-    // }
-
-*/
