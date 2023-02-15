@@ -31,7 +31,7 @@ model Shinchunghada{
   shin_amount Int
   shin_nft_totalbalance Int
   shin_cover String
-  shin_opendate	String
+  shin_period	Int
   shin_description String
   shin_category String
   shin_ispermit Int @default(1)

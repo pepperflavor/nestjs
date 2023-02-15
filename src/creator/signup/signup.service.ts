@@ -43,7 +43,6 @@ export class CreatorSignupService {
             const hasPWD = bcrypt.hashSync(enterPWD, SORT_NUM);
             newsignupForm.user_pwd = hasPWD;
             
-
         // bcrypt.genSalt(SORT_NUM, function(err, salt){
         //     bcrypt.hash(enterPWD, salt, function(err, hash){
         //         console.log("@@@@",hash);

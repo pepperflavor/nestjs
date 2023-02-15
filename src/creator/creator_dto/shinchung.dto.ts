@@ -10,7 +10,7 @@ export class CreatorShinChungDto{
     @IsString()
     shin_cover: string;
 
-    shin_opendate: any;
+    shin_period: any;
     
     @IsString()
     shin_description : string;

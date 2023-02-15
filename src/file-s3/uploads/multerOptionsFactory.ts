@@ -31,5 +31,6 @@ export const multerOptionsFactory = (
             },
         }),
         limits: {fileSize: 10* 1024 * 1024}, // 최대 10MB까지 저장
+    
     };
 };

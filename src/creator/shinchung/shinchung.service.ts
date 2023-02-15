@@ -15,7 +15,7 @@ export class CreatorShinchungService {
                     shin_amount: shinchungData.shin_amount,
                     shin_nft_totalbalance: shinchungData.shin_nft_totalbalance,
                     shin_cover: shinchungData.shin_cover,
-                    shin_opendate: shinchungData.shin_opendate,
+                    shin_period: shinchungData.shin_period,
                     shin_description: shinchungData.shin_description,
                     shin_category: shinchungData.shin_category,
                     shin_creator_address: shinchungData.shin_creator_address,

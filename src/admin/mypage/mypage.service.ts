@@ -119,6 +119,7 @@ export class MypageService {
         // metadataURL; // 이 주소 db에 저장하기
         // admin이 permit 하면 funding 테이블에도 저장하면서
         // 메타데이터 url도 저장해주기
+        // upsert 특정값이 a라면 지정한 값도 변경해준다
         await this.prisma.funding.upsert({
             where:{
                 shin_no: fundingID

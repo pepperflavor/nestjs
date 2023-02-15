@@ -22,7 +22,7 @@ export class CreatorShinchungController {
     "shin_amount": 10,
     "shin_nft_totalbalance": 100,
     "shin_cover": "https://img1.daumcdn.net/thumb/R1280x0.fjpg/?fname=http://t1.daumcdn.net/brunch/service/user/7PBF/image/b0KVeRRLDeOtIap0-KnApW1uW8Q",
-    "shin_opendate": "2023-02-04",
+    "shin_period": "2023-02-04",
     "shin_description" : "트로르 감성의 노래_1",
     "shin_category": "트로트",
     "shin_creator_address": "0x123qwe123qwe",

@@ -7,25 +7,36 @@ import * as jwt from 'jsonwebtoken'
 import { ConfigService } from '@nestjs/config';
 import { CreatorLoginDto } from '../creator/creator_dto/creator-login.dto';
 import { User } from '@prisma/client';
+import { JwtPayload } from './payload.dto';
+import { PrismaService } from '../prisma.service';
 // 지갑 바꿨을때 토큰초기화
 
 // 여기서 비밀번호 해시화 해줘야함
 @Injectable()
 export class AuthService {
     // constructor(private userService: UserLoginService, private readonly jwtService: JwtService, private readonly config: ConfigService){}
-    constructor(private userService: UserLoginService, private readonly config: ConfigService){}
+    constructor(
+        private userService: UserLoginService, 
+        private readonly config: ConfigService,
+        private prisma: PrismaService){}
     // 최초 로그인
     // userWallet: string, enterPWD: string
+
+    // 로그인할때 닉네임이랑 user_grade
     async validateUser(loginForm: CreatorLoginDto): Promise<any>{
         console.log("밸리데이터 들어옴 :")
         try {
             // 동일한 지갑 소유주가 있는지 확인
-            const user = await this.userService.findOne(loginForm.user_wallet).then((e)=>{
+            const user = await this.prisma.user.findFirst({
+                where:{
+                    user_wallet: loginForm.user_wallet
+                }
+            }).then((e)=>{
                 const pwdResult = bcrypt.compareSync(loginForm.user_pwd, e.user_pwd); // 비밀번호 동일한지 검사
                 if(pwdResult){
                     // const { user_pwd, ...result} = user; // 비밀번호 제외하고 추출
                     // 토큰발급 함수 호출 || 여기서 비밀번호는 넘겨줄 필요없나
-                    return this.login({user_wallet: e.user_wallet, user_email: e.user_email, user_pwd: e.user_pwd})
+                    return this.login({user_wallet: e.user_wallet, user_pwd: e.user_pwd})
                 }
             })
         } catch (error) {
@@ -34,7 +45,7 @@ export class AuthService {
     }
 
     async login(user: userLoginDto){
-        const payload = { userWallet: user.user_wallet, sub: user.user_email}
+        const payload = { userWallet: user.user_wallet}
         const enteredPWD = user.user_pwd;
         // 토큰 발급
         return jwt.sign(payload, this.config.get('JWT_SECRET'), {
@@ -56,4 +67,13 @@ export class AuthService {
             throw new UnauthorizedException();
         }
     }
+
+
+    async tokenValidateUser(payload: JwtPayload): Promise<any | undefined>{
+        return await this.prisma.user.findFirst({
+          where: {
+            user_wallet: payload.account,
+          }
+        })
+      }
 }

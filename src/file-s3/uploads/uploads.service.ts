@@ -10,13 +10,13 @@ export class UploadsService {
     constructor(private config: ConfigService, private readonly prisma: PrismaService){}
 
     // 파일 업로드하고 주소 추출
-    s3Uploadimage(file: Express.MulterS3.File){
+    async s3Uploadimage(file: Express.MulterS3.File){
         //file.fieldname
         if(!file){
             throw new BadRequestException('파일이 존재하지 않습니다.');
         }
         // 저장주소만 리턴
-        return { filePath: file.location }
+        return file.location;
     }
 
     // 음악파일 저장
