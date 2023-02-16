@@ -6,6 +6,6 @@ export class userLoginDto{
     user_wallet: string
 
     @IsString()
-    @Matches(/^[A-Za-z\d!@#$%^&*()]{8,30}$/) // 정규식적용
+    @Matches(/^[A-Za-z\d!@#$%^&*()]{8,30}$/) 
     user_pwd: string
 }

@@ -3,7 +3,8 @@ import { User } from '@prisma/client';
 import { PrismaService } from '../../prisma.service';
 import { CreateUserDto } from '../user_dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
-import { UserLoginService } from '../login/login.service';
+
+import { ConfigService } from '@nestjs/config';
 
 
 // 비밀번호 암호화
@@ -11,7 +12,10 @@ import { UserLoginService } from '../login/login.service';
 @Injectable()
 export class SignupService {
 
-    constructor(private prisma: PrismaService, private userLoginService : UserLoginService){}
+    constructor(
+        private prisma: PrismaService,
+        private readonly config: ConfigService
+        ){}
 
     async signUP(signupform: CreateUserDto): Promise<User>{
             const userwallet = signupform.user_wallet;// 회원가입창에서 지갑주소만 추출
@@ -21,11 +25,13 @@ export class SignupService {
             // 이미 존재하는 유저인지 확인
             const exist = this.isExistUser(userwallet);
             const existNickName = this.isExistNickName(signupform.user_nickname);
+            const SORT_NUM = parseInt(this.config.get('SORT_NUM')); 
 
             if(exist && existNickName){ // 이미 존재하는 계정이 아니라면 가입시켜주기
-                bcrypt.hash(enterPWD, 10, (err, encryptedPw: string): any =>{
-                    newsignupForm.user_pwd = encryptedPw;
-                });
+                const hashPwd = await bcrypt.hash(enterPWD, SORT_NUM)
+              
+                newsignupForm.user_pwd = hashPwd;
+
                 return await this.prisma.user.create({
                     data: newsignupForm // 이미 객체 라서 그래도 넣어도 된다
                 })

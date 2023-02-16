@@ -1,7 +1,8 @@
-import { Controller, Post, Param, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Param, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { OpenfundingService } from './openfunding.service';
 import { CreatorShinChungDto } from '../creator_dto/shinchung.dto';
 import { HttpService } from '@nestjs/axios';
+import { JwtAuthGuard } from '../../auth/jwt-auth';
 
 
 // 유저가 펀딩 오픈버튼 누르면 피나타로 쏴줄 컨트롤러
@@ -9,6 +10,7 @@ import { HttpService } from '@nestjs/axios';
 export class OpenfundingController {
     constructor(private openService: OpenfundingService){}
 
+    @UseGuards(JwtAuthGuard)
     @Post('/:id')
     postMetaData(@Param('id') shinId: string){
         try {

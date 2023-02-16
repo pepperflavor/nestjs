@@ -8,7 +8,7 @@ import { urlencoded, json } from "express";
 import dotenv = require("dotenv");
 import path = require("path");
 dotenv.config();
-// 여기서 .env 설정 전해주기
+
 
 if (process.env.NODE_ENV === "local") {
   Logger.log("서버가 로컬 환경에서 동작합니다");

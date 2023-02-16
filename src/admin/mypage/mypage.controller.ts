@@ -7,7 +7,6 @@ export class MypageController {
 
     @Get('/mypage')
     async adminFundingList(){
-        console.log("admin 마이페이지 요청들어왔다"); 
         return await this.mypageService.getAllFundList();
     }
     

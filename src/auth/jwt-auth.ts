@@ -3,6 +3,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
+// 토큰이 유효한지 확인
+// Authguard는 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt'){
     constructor(private jwtService: JwtService, private readonly config: ConfigService){
@@ -11,7 +13,6 @@ export class JwtAuthGuard extends AuthGuard('jwt'){
 
     canActive(context: ExecutionContext){
         const request = context.switchToHttp().getRequest();
-
         const { authorization } = request.headers;
 
         if(authorization === undefined){
@@ -26,7 +27,6 @@ export class JwtAuthGuard extends AuthGuard('jwt'){
     // 유효한 토큰인지 검사
     validateToken(token: string){
         const SECRETKEY = this.config.get('JWT_SECRET');
-
         try {
             const verify = this.jwtService.verify(token, {secret: SECRETKEY})
             return verify;

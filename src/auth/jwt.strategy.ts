@@ -18,11 +18,12 @@ export class JwtStrategy extends PassportStrategy(Strategy){
     }
 
     async validate(payload: JwtPayload,  done: VerifiedCallback): Promise<any>{
-        const usergrade = await this.authService.tokenValidateUser(payload);
-        if(!usergrade){
+        const user = await this.authService.tokenValidateUser(payload);
+        if(!user){
             return done(new UnauthorizedException({message: '존재하지 않는 유저입니다.'}))
         }
-        return done(null, usergrade);
+        return { grade: payload.usergrade, nickname: payload.nickname}
+        //{ grade: payload.usergrade, nickname: payload.nickname}
     }
 
 }

@@ -6,7 +6,7 @@ import { Cache } from 'cache-manager'
 export class CacheService {
     constructor(@Inject(forwardRef(() => CACHE_MANAGER)) private readonly cache: Cache){}
 
-    // 캐시에서 항목을 검색할때 사용
+
     async get(key: string): Promise<any>{
        return await this.cache.get(key);
     }
@@ -16,12 +16,12 @@ export class CacheService {
         await this.cache.set(key, value, option);
     }
 
-    // 전체 캐시를 지우려면
+
     async reset(){
         await this.cache.reset();
     }
 
-    // 캐시에서 항목제거
+
     async delete(key: string){
         await this.cache.del(key);
     }

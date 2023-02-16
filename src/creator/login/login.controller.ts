@@ -1,5 +1,6 @@
-import { Controller, Post, Body, Query, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
+import { Controller, Post, Request, UseGuards, Get, Body, Res, Headers } from '@nestjs/common';
 import { VerifyEamilDto } from '../../email/verifyEamil.dto';
+import {Response} from 'express'
 import { CreatorLoginDto } from '../creator_dto/creator-login.dto';
 import { AuthService } from '../../auth/auth.service';
 import { CreatorLoginService } from './login.service';
@@ -10,12 +11,14 @@ import { AuthGuard } from '@nestjs/passport';
 export class CreatorLoginController {
     constructor(private authService: AuthService){}
 
-    @UseGuards(AuthGuard('local'))
+   
     @Post('/login')
-    async creatorLogin(@Body() creatorLoginDto: CreatorLoginDto){
-        console.log(creatorLoginDto);
-        // auth 토큰 발급하는 로그인
-        return this.authService.validateUser(creatorLoginDto);
+    async creatorLogin(@Body() creatorLoginDto: CreatorLoginDto, @Res() res:Response, @Headers() headers: any){
+        console.log("로그인 시도 ")
+        const token = await this.authService.validateUser(creatorLoginDto); // passport
+        const data = await this.authService.postUserinfo(creatorLoginDto.user_wallet);
+        res.header('Authorization', `Bearer ${token}`);
+        res.json(data);
     }
 
 }
