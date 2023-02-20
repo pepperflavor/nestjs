@@ -28,7 +28,8 @@ lerna-debug.log*
 *.sublime-workspace
 .env
 .local.env
-divetospace-back-key-summer
+.divetospace-key.pem
+divetospace-key.pem
 
 # IDE - VSCode
 .vscode/*
