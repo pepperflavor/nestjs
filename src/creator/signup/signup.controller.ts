@@ -11,7 +11,6 @@ export class CreatorSignupController {
     // 크리에이터 회원가입
     @Post('/signup')
     async createCreator(@Body() creatorLoginForm: CreateUserDto): Promise<void>{
-        console.log(creatorLoginForm);
         const isgradeSet = creatorLoginForm.user_grade; // grade 제대로 받아오는지 한번더 확인
         if (isgradeSet === 2){
             await this.creatorService.creatorSignUP(creatorLoginForm);

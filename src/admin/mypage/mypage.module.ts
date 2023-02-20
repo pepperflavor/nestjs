@@ -22,3 +22,4 @@ import { EmailService } from '../../email/email.service';
   providers: [MypageService, PrismaService, UploadsService, CacheService, EmailService],
 })
 export class MypageModule {}
+

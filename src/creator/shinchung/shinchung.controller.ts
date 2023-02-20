@@ -17,18 +17,3 @@ export class CreatorShinchungController {
     }
 }
 
-/*
-    {
-    "shin_amount": 10,
-    "shin_nft_totalbalance": 100,
-    "shin_cover": "https://img1.daumcdn.net/thumb/R1280x0.fjpg/?fname=http://t1.daumcdn.net/brunch/service/user/7PBF/image/b0KVeRRLDeOtIap0-KnApW1uW8Q",
-    "shin_period": "2023-02-04",
-    "shin_description" : "트로르 감성의 노래_1",
-    "shin_category": "트로트",
-    "shin_creator_address": "0x123qwe123qwe",
-    "com_name": "작곡가",
-    "lyric_name": "작사가",
-    "sing_name": "하진가수"
-}
-// s3 이미지 객체 url https://divetospace.s3.ap-northeast-2.amazonaws.com/sample_1.jpg
-*/

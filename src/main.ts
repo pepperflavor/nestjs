@@ -8,7 +8,7 @@ import { urlencoded, json } from "express";
 import dotenv = require("dotenv");
 import path = require("path");
 dotenv.config();
-
+// 여기서 .env 설정 전해주기
 
 if (process.env.NODE_ENV === "local") {
   Logger.log("서버가 로컬 환경에서 동작합니다");
@@ -31,8 +31,6 @@ async function bootstrap() {
   app.enableCors();
   const PORT = process.env.PORT; // .env에서 불러온다!
   await app.listen(PORT);
-  console.log(`PORT NUM : ${PORT}`);
-  console.log(process.env.NODE_ENV);
-  console.log(process.env.DATABASE_URL);
+
 }
 bootstrap();

@@ -13,7 +13,6 @@ export class UserLoginService {
     // 지갑주소로 유저 찾기(가입한 유저인지 확인), 로그인 할 때 사용
     // 특정유저 찾아서 결과 return
    async findOne(userwallet: string): Promise<any>{
-    console.log("findOne 들어옴 ")
             const result = await this.prisma.user.findUnique({ 
                 where :
                 {
@@ -21,7 +20,6 @@ export class UserLoginService {
                 },
             });
 
-            console.log("@@@ 로그인할 때 findOne 결과 : ",result)
             if(result == null || undefined ){
                 throw new HttpException('아이디가 존재하지 않습니다.', HttpStatus.BAD_REQUEST); // 오류번호 수정예정
             }
@@ -40,48 +38,4 @@ export class UserLoginService {
         }
     }
 
-    
 }
-
-    //====== AUTH에 로그인 새로 만듬
-    // async login(loginForm: userLoginDto): Promise<User | undefined>{
-    //     try {
-    //         // loginForm으로 유저지갑주소랑 비밀번호 받아옴
-    //         const result = await this.prisma.user.findUnique({ where: loginForm});
-    //         return result
-    //     } catch (error) {
-    //         throw new HttpException('Login Fail ', 401)
-    //     }
-    // }
-
-
-// {
-//     "user_no":  "1",
-//     "user_nickname": 'Conan',
-//     "user_pwd": '1234aaa',
-//     "user_email" : 'test1@test.com',
-//     "user_wallet": '0x123456ddd789sss',
-//     "user_streaming": "0",
-//     "user_grade" : "0",
-//    }
-
-   // private readonly users =[
-    //    {
-    //     user_no:  1,
-    //     user_nickname: 'Conan',
-    //     user_pwd: '1234aaa',
-    //     user_email : 'test1@test.com',
-    //     user_wallet: '0x123456ddd789sss',
-    //     user_streaming: 0,
-    //     user_grade : 0,
-    //    },
-    //    {
-    //     user_no:  2,
-    //     user_nickname: 'RAYE',
-    //     user_pwd: '1234',
-    //     user_email : 'test2@test.com',
-    //     user_wallet: '0x9999ssss888',
-    //     user_streaming: 0,
-    //     user_grade : 1,
-    //    }
-    // ]

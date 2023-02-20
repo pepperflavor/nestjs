@@ -23,7 +23,7 @@ export class MypageService {
                 shin_ispermit: true,
             }
         })
-        console.log("@@ 크리에이터 마이페이지", result[0].shin_no);
+
 
         // 닉네임가능하면 던져주기
         return result;

@@ -27,20 +27,20 @@ export class DownloadService {
         }
 
         const stream = s3.getObject(options).createReadStream();
-        console.log(stream)
+
 
         // 스트림을 파이핑해서 응답함, 이걸 redis에 저장하는 법은 없을까?
         const musicfile = new StreamableFile(stream);
 
-        console.log("뮤직 파일 : ",musicfile)
+
         await this.cache.set(`${musictitle}`, musicfile);
         const result = await this.cache.get(`${musictitle}`);
-        //console.log("@@ 음악파일 다운받은것 : ",result)
+
 
         if(result == null || undefined){
-            return console.log("음악다운로드 실패")
+            throw new Error('음악다운로드 실패')
         }else{
-            return console.log("음악다운로드 성공 틀어보자")
+            return true
         }
      }
 }

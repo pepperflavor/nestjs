@@ -16,7 +16,6 @@ export class OpenfundingController {
         try {
             // 앞단에서 permit =2 여야 버튼 활성화 된다고했으니 다시물어보기
             // 아이디 뽑아서 숫자로 바꿔줌, db에서 조회할때 숫자로 해야하기때문
-            console.log(shinId);
             const shinNo = parseInt(shinId); 
             if(typeof(shinNo) === 'number'){
                 return this.openService.openFunding(shinNo);
@@ -25,12 +24,5 @@ export class OpenfundingController {
             throw new HttpException('펀딩 아이디 추출 실패', HttpStatus.NOT_FOUND);
         }
     }
-
-    // @Post('/ex')
-    // imagePost(){
-    //     console.log("올라가나 확인해보기");
-    //     const url = "https://img1.daumcdn.net/thumb/R1280x0.fjpg/?fname=http://t1.daumcdn.net/brunch/service/user/7PBF/image/b0KVeRRLDeOtIap0-KnApW1uW8Q"
-    //     //this.openService.getImageCID(url);
-    // }
 
 }

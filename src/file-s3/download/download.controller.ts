@@ -18,10 +18,10 @@ export class DownloadController {
 
         try {
             const fullUrl = await s3.getSignedUrlPromise('getObject', params);
-            console.log("@@ 음악 주소 뽑아내느거 맞나? : ",fullUrl)
+
             // 물음표까지만 떼고 .mp3 붙여주기
             const url = fullUrl.split('?', 1) + '.mp3';
-            console.log("@@@ 진짜 url : ", url)
+
             return url;
         } catch (error) {
             return res.status(500).send(error);

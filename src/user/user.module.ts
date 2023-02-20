@@ -3,13 +3,15 @@ import { AuthModule } from '../auth/auth.module';
 import { SignUpModule } from './signup/signup.module';
 import { LoginModule } from './login/login.module';
 import { MypageModule } from './mypage/mypage.module';
+                                                                                                                                                                                                          
 
 
-
+// MypageModule
 @Module({
-  imports:[SignUpModule, LoginModule, AuthModule, MypageModule],
+  imports:[SignUpModule, LoginModule, AuthModule],
   controllers: [],
   providers: [],
   exports: []
 })
 export class UserModule {}
+// service : 유저를 검색하고 비밀번호 확인

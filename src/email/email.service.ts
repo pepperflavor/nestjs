@@ -25,16 +25,14 @@ export class EmailService {
     }
 
     async sendCreatorJoinVerification(emailAddress: string, signupVerifyToken: string, option: string){
-        // nodemailer 연결이 잘 됐는지 확인
-        console.log("메일전송 했다");
-        
-        this.transporter.verify(function (error, success) {
-            if (error) {
-              console.log(error);
-            } else {
-              console.log("Server is ready to take our messages");
-            }
-          });
+
+        // this.transporter.verify(function (error, success) {
+        //     if (error) {
+        //       console.log(error);
+        //     } else {
+        //       console.log("Server is ready to take our messages");
+        //     }
+        //   });
 
         const baseURL = 'http://localhost:3001';
 

@@ -26,7 +26,6 @@ export class CreatorSignupService {
         const nick = signupForm.user_nickname;
         // 존재하는 유저인지 확인
        const existUser = await this.isExistUser(userwallet);
-       console.log("@@@ 익짓 : ", existUser)
        const enterPWD = signupForm.user_pwd;
        const newsignupForm = {...signupForm} // 입력값 다른 주소로 복사해서 할당해놓기 
         // 첫번째인수 = 환경변수 키값, 두번째 기본값 넣어줄 수 있음
@@ -42,22 +41,7 @@ export class CreatorSignupService {
             // 입력받은 비밀번호 해시화해서 저장...이 안되고 있음
             const hasPWD = bcrypt.hashSync(enterPWD, SORT_NUM);
             newsignupForm.user_pwd = hasPWD;
-            
-        // bcrypt.genSalt(SORT_NUM, function(err, salt){
-        //     bcrypt.hash(enterPWD, salt, function(err, hash){
-        //         console.log("@@@@",hash);
-        //         newsignupForm.user_pwd = hash;
-        //     })
-        // })
-        //    const hasPWD = bcrypt.hash(enterPWD, saltOrRounds, function (err, hash) {
-        //        newsignupForm.user_pwd = hasPWD;
-        //    });
-          
-            // (err, encryptedPw: string): any =>{
-            //     console.log("@@@@@",encryptedPw); // undifinded 뜸
-            //     newsignupForm.user_pwd = encryptedPw;
-            // });
-
+   
             // 임시로 uuid 토큰 발급 uuid.v1 이란?
             // email인증에 담아보낼 토큰 임시값 무작위 문자열임
             const signupVerifyToken = uuid.v1();
@@ -110,7 +94,7 @@ export class CreatorSignupService {
                 user_nickname : user_nickname
             }
         });
-        console.log("@@@ 닉네임 함수 : ", exist);
+
         // 값이 존재하지 않으면
         if(exist == null||undefined){
             return true;
@@ -129,7 +113,7 @@ export class CreatorSignupService {
     // 크리에이터로 가입하려면 이메일 인증
     private async sendCreatorJoinEmail(email:string, signupVerifyToken: string): Promise<any>{
        await this.emailService.sendCreatorJoinVerification(email, signupVerifyToken, 'signUP');
-       console.log("sendCreatorJoinEmail 진행되었다")
+
        // signupform 돌려줄줄 알았는데 아님
        //return result; => sendCreatorJoinVerification을 실행시키기 때문에 리턴값이 비어있었음
        // 다른 라우터로 요청을 보냈으니까
@@ -144,12 +128,12 @@ export class CreatorSignupService {
 
             const cacheKey = email;
             const DATA = await this.cacheManger.get(`${cacheKey}`);
-            console.log("@@ 캐시에 저장했던 회원가입 정보 : ", DATA);
+   
                      
             await this.prisma.user.create({
                 data : DATA
             })
-            console.log("회원가입 완료");
+
 
             if(result == null){
                 return new HttpException('잘못된 인증정보입니다.', HttpStatus.BAD_REQUEST);

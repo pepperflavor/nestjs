@@ -28,7 +28,7 @@ export class OpenfundingService {
                 shin_no : shinNo,
             },
             data: {
-                fund_state: 2,
+                fund_state: 1,
             }
         })
         // funding 테이블 fund_no로 변경함
@@ -41,7 +41,6 @@ export class OpenfundingService {
             }
         })
 
-        console.log("fund_no 추출", tokenId)
 
         // 처음 row값 다 뽑기
         const getobj = await this.prisma.shinchunghada.findMany({
@@ -96,18 +95,19 @@ export class OpenfundingService {
             }
         })
 
-        // 여기서 ispermit 값이 변경하면 funding테이블에 fund_state 값 1로 생성
-        const metaDataurl = data.fund_pinurl;
-        // 앞단에 던져줄 데이터
-        // 토큰아이디(fund_no), 발행량, 총금액, 메타데이터url, 기간
-        const sendData = {
-            tokenId : shinNo,
-            balance : shin_nft_totalbalance,
-            totalPrice : shin_amount,
-            opendate : shin_period,
-            metaData : metaDataurl
-        }
-
+      // 여기서 ispermit 값이 변경하면 funding테이블에 fund_state 값 1로 생성
+      const metaDataurl = data.fund_pinurl;
+      const fundState = data.fund_state
+      // 앞단에 던져줄 데이터
+      // 토큰아이디(fund_no), 발행량, 총금액, 메타데이터url, 기간
+      const sendData = {
+          tokenId : tokenId.fund_no,
+          balance : shin_nft_totalbalance,
+          totalPrice : shin_amount,
+          opendate : shin_period,
+          metaData : metaDataurl,
+          fundState : fundState
+      }
         // 여기서 fund_state upsert로 변경해주기
 
         // 앞단에 민팅 함수에 넣어줄 값 던져주기
