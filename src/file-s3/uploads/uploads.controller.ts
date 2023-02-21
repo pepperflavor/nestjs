@@ -20,3 +20,4 @@ export class UploadsController {
     return url;
   }
 
+}
