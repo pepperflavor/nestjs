@@ -6,7 +6,7 @@ import { userLoginDto } from '../user_dto/user-login.dto';
 import { PrismaService } from '../../prisma.service';
 
 
-@Controller('user')
+@Controller('/user')
 export class UserLoginController {
     constructor(private authService: AuthService, private prisma: PrismaService){}
     
@@ -18,7 +18,7 @@ export class UserLoginController {
         res.json({data: data, token: token });
     }
 
-    @Get()
+    @Get('')
     async getinfo(){
         const data = await this.prisma.user.findFirst({
             where:{
