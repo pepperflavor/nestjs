@@ -137,9 +137,9 @@ export class CreatorSignupService {
 
             if(result == null){
                 return new HttpException('잘못된 인증정보입니다.', HttpStatus.BAD_REQUEST);
-            }else{
-                return "회원가입이 완료되었습니다."
-                }
+            }
+            
+            return "회원가입이 완료되었습니다."
         }
         // DB에서 signupVerifyToken으로 회원가입 처리중인 유저가 있는지 조회하고 없다면 에러 처리
         // 바로 로그인 상태가 되도록 JWT 발급

@@ -20,12 +20,3 @@ export class CreatorLoginController {
     }
 
 }
-
-/*
-        // // 유효한 이메일인지 확인 -> 회원가입으로 옮김
-    // @Post('email_verify')
-    // async verifyEamil(@Query() emailDto: VerifyEamilDto): Promise<string>{
-    //     const { signupVerifyToken } = emailDto; // 토큰 추출
-    //     return await this.creatorService.verifyEmail(signupVerifyToken);
-    // }
-*/
