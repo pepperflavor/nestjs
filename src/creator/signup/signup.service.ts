@@ -119,7 +119,7 @@ export class CreatorSignupService {
     //signupVerifyToken: string
     private async sendCreatorJoinEmail(email:string): Promise<any>{
         const token = await this.cacheManger.get(`${email}`)
-       await this.emailService.sendCreatorJoinVerification(email, token, 'signUP');
+        await this.emailService.sendCreatorJoinVerification(email, token, 'signUP');
        //await this.emailService.awsEmail(email, signupVerifyToken, 'signUP');
        // signupform 돌려줄줄 알았는데 아님
        //return result; => sendCreatorJoinVerification을 실행시키기 때문에 리턴값이 비어있었음
@@ -139,7 +139,6 @@ export class CreatorSignupService {
                 return new HttpException('잘못된 인증정보입니다.', HttpStatus.BAD_REQUEST);
             }
 
-            const cacheKey = email;
             const DATA = await this.cacheManger.get(`${email}`);
      
             await this.prisma.user.create({

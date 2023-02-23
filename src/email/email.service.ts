@@ -36,7 +36,7 @@ export class EmailService {
         //     }
         //   });
 
-        const baseURL = 'http://ec2-3-38-20-36.ap-northeast-2.compute.amazonaws.com:3001'
+        const baseURL = await this.config.get('MAILER_BASEURL')
         //const baseURL = 'http://localhost:3001'
 
     if(option == 'signUP'){
@@ -52,9 +52,7 @@ export class EmailService {
             // 메일 본문 구성
             html: `
                 가입 확인 버튼을 누르시면 가입인증이 완료됩니다</br>
-                <a href=${url}>
-                <button>가입확인</button>
-                </a>
+                <a href=${url}> 가입확인 </a>
                 `
         }
        /*
