@@ -25,6 +25,7 @@ export class CreatorSignupController {
     async verifyEamil(@Query("signupVerifyToken") signupVerifyToken: string, @Query("email") email: string): Promise<any>{
          // 무작위 uuid로 발급한 토큰 추출
         const respones = await this.creatorService.verifyEmail(signupVerifyToken, email);
+        
         // const msg = "회원가입이 완료되었습니다."
         // if(respones == msg){
         //     return true;

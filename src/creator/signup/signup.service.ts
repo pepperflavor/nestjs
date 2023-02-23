@@ -47,8 +47,12 @@ export class CreatorSignupService {
             const signupVerifyToken = uuid.v1();
 
             newsignupForm.user_email_token = signupVerifyToken; 
-
+            
+            
             const cacheKey = newsignupForm.user_email;
+
+            // 이메일_token :  토큰 키
+            await this.cacheManger.set(`${cacheKey}_token`, signupVerifyToken)
             //await this.cacheManger.set(`${signupVerifyToken}`, signupVerifyToken) // 토큰저장
             //await this.cacheManger.set(`${cacheKey}`, cacheKey); // 이메일저장
             // 레디스에 회원가입 정보 객체 저장
@@ -113,7 +117,7 @@ export class CreatorSignupService {
     // 크리에이터로 가입하려면 이메일 인증
     private async sendCreatorJoinEmail(email:string, signupVerifyToken: string): Promise<any>{
        await this.emailService.sendCreatorJoinVerification(email, signupVerifyToken, 'signUP');
-
+       //await this.emailService.awsEmail(email, signupVerifyToken, 'signUP');
        // signupform 돌려줄줄 알았는데 아님
        //return result; => sendCreatorJoinVerification을 실행시키기 때문에 리턴값이 비어있었음
        // 다른 라우터로 요청을 보냈으니까
@@ -123,22 +127,23 @@ export class CreatorSignupService {
     // 유효한 이메일인지 확인 
     async verifyEmail(signupVerifyToken: string, email: string): Promise<any>{
         // url에 담겼던 토큰 꺼내서 일치하는 유저가 있는지 확인
-            const result = await this.prisma.$queryRaw`SELECT * FROM USER WHERE user_email_token =${signupVerifyToken}`
+            const result =  await this.cacheManger.get(`${email}_token`);
+            //console.log(" verifyemail 들어오나 ", result)
+            // const result = await this.prisma.$queryRaw`SELECT * FROM USER WHERE user_email_token =${signupVerifyToken}`
             // result 빈 배열나옴
+
+            
+            if(result == null){
+                return new HttpException('잘못된 인증정보입니다.', HttpStatus.BAD_REQUEST);
+            }
 
             const cacheKey = email;
             const DATA = await this.cacheManger.get(`${cacheKey}`);
-   
-                     
+     
             await this.prisma.user.create({
                 data : DATA
             })
 
-
-            if(result == null){
-                return new HttpException('잘못된 인증정보입니다.', HttpStatus.BAD_REQUEST);
-            }
-            
             return "회원가입이 완료되었습니다."
         }
         // DB에서 signupVerifyToken으로 회원가입 처리중인 유저가 있는지 조회하고 없다면 에러 처리

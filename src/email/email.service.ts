@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import Mail from 'nodemailer/lib/mailer';
 import * as nodemailer from 'nodemailer'
 import { ConfigService } from '@nestjs/config';
+import * as AWS from 'aws-sdk';
 
 interface EmailOptions {
     to: string;
@@ -35,11 +36,13 @@ export class EmailService {
         //     }
         //   });
 
-        const baseURL = this.config.get('MAILER_BASEURL');
+        const baseURL = 'http://ec2-3-38-20-36.ap-northeast-2.compute.amazonaws.com:3001'
+        //const baseURL = 'http://localhost:3001'
 
     if(option == 'signUP'){
               // 유저가 누를 버튼이 가질링크 구성, 이 링크로 다시 우리 서비스로 이메일 인증요청이 들어옴
         // /creator_signup/email_verify 이 주소로 다시 요청을보냄
+        console.log("@@@ 메일 서비스에 전달된 토큰 :  ",signupVerifyToken)
         const url = `${baseURL}/creator/email-verify?signupVerifyToken=${signupVerifyToken}&email=${emailAddress}`;
         
         const mailOptions: EmailOptions ={
@@ -82,9 +85,33 @@ export class EmailService {
                 <h3>다음에 좋은 결과가 있기를 진심으로 바랍니다.</h3>
                 `
         }
-        return await this.transporter.sendMail(mailOptions); //transporter 객체로 메일전송
+            return await this.transporter.sendMail(mailOptions); //transporter 객체로 메일전송
 
         }
+    }
+
+    async awsEmail(address: string, signupVerifyToken: string, option: string){
+        const transfer = nodemailer.createTransport({
+            SES: new AWS.SES({
+                apiVersion: '2010-12-01'
+            })
+        })
+
+        const baseURL = 'http://localhost:3001';
+        const url2 ='http://ec2-3-38-20-36.ap-northeast-2.compute.amazonaws.com:3001'
+
+        const url = `${baseURL}/creator/result?signupVerifyToken=${signupVerifyToken}`;
+        this.transporter.sendMail({
+            from: this.config.get('MAILER'),
+            to: address,
+            html: ` 
+            가입 확인 버튼을 누르시면 가입인증이 완료됩니다</br>
+            <form action=${url} method='GET'>
+            <a>${option}</a>
+            <button>가입확인</button>
+            </form>
+            `
+        })
     }
 }
 
