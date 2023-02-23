@@ -64,7 +64,8 @@ export class CreatorSignupService {
             // return이 비어있는거 맞음! 다른 라우터로 요청보냈음 - 처음에 this.sendCreatorJoinEmail() 리턴값을 받음
             // Promise여야 .then이 효과있는듯 => 것도 아닌듯 ㅅㅂ
             // 이메일 반환값 true 주게 만들어서 판단하고 저장해주기로 함!
-            await this.sendCreatorJoinEmail(signupForm.user_email, signupVerifyToken);
+            //signupVerifyToken
+            await this.sendCreatorJoinEmail(signupForm.user_email);
   
             // // 토큰 응답한 사람이 입력한 이메일과 같은지 다시한번 검증할 필요가벗음
             // uuid.v1 사용했기 때문
@@ -115,8 +116,10 @@ export class CreatorSignupService {
     }
 
     // 크리에이터로 가입하려면 이메일 인증
-    private async sendCreatorJoinEmail(email:string, signupVerifyToken: string): Promise<any>{
-       await this.emailService.sendCreatorJoinVerification(email, signupVerifyToken, 'signUP');
+    //signupVerifyToken: string
+    private async sendCreatorJoinEmail(email:string): Promise<any>{
+        const token = await this.cacheManger.get(`${email}`)
+       await this.emailService.sendCreatorJoinVerification(email, token, 'signUP');
        //await this.emailService.awsEmail(email, signupVerifyToken, 'signUP');
        // signupform 돌려줄줄 알았는데 아님
        //return result; => sendCreatorJoinVerification을 실행시키기 때문에 리턴값이 비어있었음
@@ -126,19 +129,18 @@ export class CreatorSignupService {
 
     // 유효한 이메일인지 확인 
     async verifyEmail(signupVerifyToken: string, email: string): Promise<any>{
-        // url에 담겼던 토큰 꺼내서 일치하는 유저가 있는지 확인
+            // url에 담겼던 토큰 꺼내서 일치하는 유저가 있는지 확인
             const result =  await this.cacheManger.get(`${email}_token`);
             //console.log(" verifyemail 들어오나 ", result)
             // const result = await this.prisma.$queryRaw`SELECT * FROM USER WHERE user_email_token =${signupVerifyToken}`
             // result 빈 배열나옴
 
-            
             if(result == null){
                 return new HttpException('잘못된 인증정보입니다.', HttpStatus.BAD_REQUEST);
             }
 
             const cacheKey = email;
-            const DATA = await this.cacheManger.get(`${cacheKey}`);
+            const DATA = await this.cacheManger.get(`${email}`);
      
             await this.prisma.user.create({
                 data : DATA

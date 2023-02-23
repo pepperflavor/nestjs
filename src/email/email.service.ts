@@ -43,6 +43,7 @@ export class EmailService {
               // 유저가 누를 버튼이 가질링크 구성, 이 링크로 다시 우리 서비스로 이메일 인증요청이 들어옴
         // /creator_signup/email_verify 이 주소로 다시 요청을보냄
         console.log("@@@ 메일 서비스에 전달된 토큰 :  ",signupVerifyToken)
+
         const url = `${baseURL}/creator/email-verify?signupVerifyToken=${signupVerifyToken}&email=${emailAddress}`;
         
         const mailOptions: EmailOptions ={
@@ -51,11 +52,24 @@ export class EmailService {
             // 메일 본문 구성
             html: `
                 가입 확인 버튼을 누르시면 가입인증이 완료됩니다</br>
-                <form action=${url} method='GET'>
+                <a href=${url}>
                 <button>가입확인</button>
-                </form>
+                </a>
                 `
         }
+       /*
+            const mailOptions: EmailOptions ={
+            to: emailAddress,
+            subject : 'creator 가입인증 메일',
+            // 메일 본문 구성
+            html: `
+                가입 확인 버튼을 누르시면 가입인증이 완료됩니다</br>
+                <a action=${url} method='GET'>
+                <button>가입확인</button>
+                </a>
+                `
+        }
+       */ 
         return await this.transporter.sendMail(mailOptions); //transporter 객체로 메일전송
 
     }else if(option == 'permit'){
@@ -115,8 +129,3 @@ export class EmailService {
     }
 }
 
-/*
-                <form action=${url} method='POST'>
-                <button>가입확인</button>
-                </form>
-*/
