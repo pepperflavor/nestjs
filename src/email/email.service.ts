@@ -3,6 +3,7 @@ import Mail from 'nodemailer/lib/mailer';
 import * as nodemailer from 'nodemailer'
 import { ConfigService } from '@nestjs/config';
 import * as AWS from 'aws-sdk';
+import { CacheService } from '../cache/cache.service';
 
 interface EmailOptions {
     to: string;
@@ -13,7 +14,9 @@ interface EmailOptions {
 @Injectable()
 export class EmailService {
     private transporter : Mail; // nodemailer에서 import
-    constructor(private readonly config: ConfigService){
+    constructor(
+        private readonly config: ConfigService,
+        private readonly cache: CacheService){
         const baseURL = this.config.get('MAILER_BASEURL');
         // nodemailer에서 제공하는 Transport 객체 생성
         this.transporter = nodemailer.createTransport({
@@ -28,13 +31,13 @@ export class EmailService {
 
     async sendCreatorJoinVerification(emailAddress: string, signupVerifyToken: string, option: string){
 
-        // this.transporter.verify(function (error, success) {
-        //     if (error) {
-        //       console.log(error);
-        //     } else {
-        //       console.log("Server is ready to take our messages");
-        //     }
-        //   });
+        this.transporter.verify(function (error, success) {
+            if (error) {
+              throw new Error('이메일 전송 실패')
+            } else {
+              console.log("Server is ready to take our messages");
+            }
+          });
 
         const baseURL = await this.config.get('MAILER_BASEURL')
         //const baseURL = 'http://localhost:3001'
@@ -42,9 +45,11 @@ export class EmailService {
     if(option == 'signUP'){
               // 유저가 누를 버튼이 가질링크 구성, 이 링크로 다시 우리 서비스로 이메일 인증요청이 들어옴
         // /creator_signup/email_verify 이 주소로 다시 요청을보냄
-        console.log("@@@ 메일 서비스에 전달된 토큰 :  ",signupVerifyToken)
+       // console.log("@@@ 메일 서비스에 전달된 토큰 :  ",signupVerifyToken)
 
-        const url = `${baseURL}/creator/email-verify?signupVerifyToken=${signupVerifyToken}&email=${emailAddress}`;
+        const token = await this.cache.get(`${emailAddress}_token`);
+
+        const url = `${baseURL}/creator/email-verify?signupVerifyToken=${token}&email=${emailAddress}`;
         
         const mailOptions: EmailOptions ={
             to: emailAddress,
