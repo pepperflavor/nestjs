@@ -44,7 +44,7 @@ export class CreatorShinchungService {
             })
             return result;
         } catch (error) {
-            throw new HttpException('신청데이터가 누락되었습니다.', HttpStatus.BAD_REQUEST)
+            throw new HttpException('신청데이터가 누락되었습니다.', HttpStatus.BAD_REQUEST) //404에러
         }
     }
 }

@@ -21,7 +21,8 @@ export class UserLoginService {
             });
 
             if(result == null || undefined ){
-                throw new HttpException('아이디가 존재하지 않습니다.', HttpStatus.BAD_REQUEST); // 오류번호 수정예정
+                //HttpStatus.Bad_Request나 HttpStatus.UNAUTHORIZED라고 했었으나 Not_found가 가장 적절 한것같아 수정
+                throw new HttpException('아이디가 존재하지 않습니다.', 404); 
             }
             return result;
     }
@@ -34,7 +35,7 @@ export class UserLoginService {
             });
             return result;
         } catch (error) {
-            throw new HttpException('아이디가 존재하지 않습니다.', HttpStatus.BAD_REQUEST); // 오류번호 수정예정   
+            throw new HttpException('아이디가 존재하지 않습니다.', 404);  
         }
     }
 

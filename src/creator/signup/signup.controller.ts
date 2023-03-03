@@ -15,7 +15,7 @@ export class CreatorSignupController {
         if (isgradeSet === 2){
             await this.creatorService.creatorSignUP(creatorLoginForm);
         }else{
-            throw new HttpException('user_grade 2로 설정안됐음', HttpStatus.BAD_REQUEST)
+            throw new HttpException('user_grade 2로 설정안됐음', HttpStatus.BAD_REQUEST);
         }
     }
 

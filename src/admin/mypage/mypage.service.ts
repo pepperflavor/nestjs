@@ -160,7 +160,7 @@ export class MypageService {
         // 여기서 funding 테이블에도 저장함
             return result;
         }else{
-            throw new HttpException('승인처리 실패', 400);
+            throw new HttpException('승인처리 실패', 404);
         }
     }
 
@@ -204,7 +204,7 @@ export class MypageService {
         if(result){
             return result;
         }else{
-            throw new HttpException('승인 반려처리 실패', 400);
+            throw new HttpException('승인 반려처리 실패', 404);
         }
     }
 
