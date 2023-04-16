@@ -2,12 +2,15 @@ name: 'test-every-push'
 
 # workflow를 동작하게 할 트리거
 # 레파지토리에 push 이벤트가 발생할 때마다 실행될 것이다. +) push말고 다른 이벤트도 있음
-on: push 
+on: 
+  push:
+    branches: [ main ] 
+
+  # 작업탬에서 수동으로 테스트 가능하게 하기
+  workflow_dispatch:
 
 jobs:
-  test:
-    #job의 이름을 정해준다
-    name: Test lint, tsc, build
+  build:
     # 해당 job을 리눅스 환경에서 사용할 예정이다.
     runs-on: ubuntu-latest
 
