@@ -23,6 +23,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Test_shell
+        run: echo Hello, world!
 
       - shell: bash
         name: Secret Test
@@ -30,7 +31,7 @@ jobs:
           TEST_SECRET : ${{ secrets.TELL_ME_NAME }}
           run: 
 
-            if [ $TESTSECRET==PEPPER ]; then echo sam; fi
+            if [ $TEST_SECRET==PEPPER ]; then echo sam; fi
           
 
         # with 키워드로 Action에 값을 전달할 수 있다.
