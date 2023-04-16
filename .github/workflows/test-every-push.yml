@@ -25,7 +25,7 @@ jobs:
       - shell: bash
         name: Secret Test
         env:
-          TEST_SECRET : ${{ secret.TELL_ME_NAME }}
+          TEST_SECRET : ${{ secrets.TELL_ME_NAME }}
           run: 
 
             if [ $TESTSECRET==PEPPER ]; then echo sam; fi
