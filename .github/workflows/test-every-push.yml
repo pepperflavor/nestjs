@@ -29,7 +29,7 @@ jobs:
         name: Secret Test
         env:
           TEST_SECRET : ${{ secrets.TELL_ME_NAME }}
-          run: 
+          run: | 
 
             if [ $TEST_SECRET==PEPPER ]; then echo sam; fi
           
