@@ -1,7 +1,7 @@
 name: 'test-every-push'
 
 # workflow를 동작하게 할 트리거
-# 레파지토리에 push 이벤트가 발생할 때마다 실행될 것이다. +) push말고 다른 이벤트도 있음
+# 레파지토리의 main브런치에 push 이벤트가 발생할 때마다 실행될 것이다. +) push말고 다른 이벤트도 있음
 on: 
   push:
     branches: [ main ] 
@@ -10,7 +10,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  test:
+    name: Test lint
+
     # 해당 job을 리눅스 환경에서 사용할 예정이다.
     runs-on: ubuntu-latest
 
@@ -22,17 +24,17 @@ jobs:
       # 누군가 만든 Action을 사용할 때는 uses라는 키워드가 꼭 필요하다.
       - uses: actions/checkout@v2
 
-      - name: Test_shell
-        run: echo Hello, world!
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
 
       - shell: bash
         name: Secret Test
         env:
-          TEST_SECRET : ${{ secrets.TELL_ME_NAME }}
-          run: | 
-
-            if [ $TEST_SECRET==PEPPER ]; then echo sam; fi
-          
+          TEST_SECRET: ${{ secrets.TELL_ME_NAME }}
+        run: |
+          if [ $TEST_SECRET==PEPPER ]; then echo same; fi
 
         # with 키워드로 Action에 값을 전달할 수 있다.
         # secret에 설정한 값을 받아올 수 있는데
